@@ -64,5 +64,6 @@ export const SUPPORTED_LANGUAGE = [
   { identifier: "spanish", name: "Spanish" },
 ];
 
-// export const chatGptAPI_KEY = "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";
-export const chatGptAPI_KEY = "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";
+// export const chatGptAPI_KEY = "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";
+export const chatGptAPI_KEY = "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";
+// export const chatGptAPI_KEY = "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";

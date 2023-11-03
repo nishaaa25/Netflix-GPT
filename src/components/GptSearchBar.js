@@ -33,7 +33,7 @@ const GptSearchBar = () => {
     });
 
     if (!gptResults.choices) {
-// 
+      console.log("error");
     }
 
     // Array of movies provided by openai
