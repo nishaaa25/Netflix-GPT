@@ -6,6 +6,7 @@ import { options } from "../constants/constant";
 import { addGptMovies } from "../utils/searchSlice";
 
 const GptSearchBar = () => {
+  const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
   const searchText = useRef(null);
   const configLang = useSelector((state) => state.config.lang);
@@ -27,29 +28,31 @@ const GptSearchBar = () => {
       searchText.current.value +
       ". only give me names of 10 movies, comma seperated like the example result given ahead. Example Result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya";
 
-    const gptResults = await openai.chat.completions.create({
-      messages: [{ role: "user", content: gptQuery }],
-      model: "gpt-3.5-turbo",
-    });
+    try {
+      const gptResults = await openai.chat.completions.create({
+        messages: [{ role: "user", content: gptQuery }],
+        model: "gpt-3.5-turbo",
+      });
 
-    if (!gptResults.choices) {
-      alert("The API key has reached the maximum number of allowed requests.");
+      // Array of movies provided by openai
+      const gptMovies = gptResults.choices?.[0]?.message?.content.split(",");
+
+      // Calling searchMovies function for each movie
+      const promiseArray = gptMovies.map((movie) => searchMovie(movie));
+
+      const tmdbResults = await Promise.all(promiseArray);
+      dispatch(
+        addGptMovies({ moviesResults: tmdbResults, moviesName: gptMovies })
+      );
+    } catch (error) {
+      console.error("Error during GPT API request:", error);
+      setErrorMessage("The API key has reached the maximum number of allowed requests.");
     }
-
-    // Array of movies provided by openai
-    const gptMovies = gptResults.choices?.[0]?.message?.content.split(",");
-
-    // Calling searchMOvies function for each movies
-    const promiseArray = gptMovies.map((movie) => searchMovie(movie));
-
-    const tmdbResults = await Promise.all(promiseArray);
-    dispatch(addGptMovies({moviesResults: tmdbResults, moviesName: gptMovies}));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
-
   return (
     <div>
       <div className="w-full h-full pt-32 relative z-40 mb-4">
@@ -71,6 +74,9 @@ const GptSearchBar = () => {
             {lang[configLang].search}
           </button>
         </form>
+        {errorMessage && (
+          <div className="text-white text-center text-base bg-red-600 rounded-sm w-5/6 sm:w-4/6 md:w-3/6 lg:w-2/6 m-auto mt-6 p-3">{errorMessage}</div>
+        )}
       </div>
     </div>
   );
