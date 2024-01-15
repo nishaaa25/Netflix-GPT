@@ -11,7 +11,7 @@ const VideoDetails = ({ title, overview, release, rating }) => {
           </div>
           <p> | {date.getFullYear()}</p>
         </div>
-        <p className="font-bold text-2xl md:text-[62px] lg:text-[82px] mb-2 md:mb-6 lg:mb-10">{title}</p>
+        <p className="font-bold w-4/6 text-2xl md:text-[62px] lg:text-[82px] leading-[94px] mb-2 md:mb-6 lg:mb-10">{title}</p>
         <p className="hidden md:block md:text-md lg:text-lg w-6/12 mb-8">{overview}</p>
         <button className="px-3 py-1 md:px-6 md:py-2 text-sm md:text-lg  text-black bg-white mr-3 rounded-md font-semibold hover:bg-opacity-70">
           <svg
