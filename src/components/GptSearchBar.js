@@ -33,7 +33,7 @@ const GptSearchBar = () => {
     });
 
     if (!gptResults.choices) {
-      console.log("error");
+      alert("The API key has reached the maximum number of allowed requests.");
     }
 
     // Array of movies provided by openai
